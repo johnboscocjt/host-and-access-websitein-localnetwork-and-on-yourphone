@@ -100,6 +100,7 @@ sudo chmod -R 755 /var/www/html/mywebsite
 Access Your Website on PC
 Open a browser on your PC and navigate to:
 http://localhost/mywebsite
+Example: http://localhost/databasesite/index1.php
 
  Find Your PC's Local IP Address
 Open a terminal and run:
@@ -123,11 +124,17 @@ http://<your-pc-ip-address>/mywebsite
 
 6. Configure Firewall (if needed)
 Allow Apache in the firewall:
+Enable Apache in the firewall:
 ```bash
 sudo ufw allow "Apache"  
+```
+Reload the firewall:
+```bash
 sudo ufw reload  
 ```
 
+Test Connectivity
+From your phone, you should now be able to view the website.
 
 ### Notes and Troubleshooting.
 Note 1: Using Private IPs
@@ -171,7 +178,132 @@ sudo tail -f /var/log/apache2/error.log
 
 
 
-### Proudly made by JohnBoscocjt
+### Other.
+## note:1
+Your correct IP address may look like this -> 10.42.0.1, which is a private IP address, which means it is only accessible within your local network (in this case, your hotspot). To access a website hosted on your PC from your phone, you'll need to ensure that the phone is connected to the same hotspot and that the Apache server is properly configured.
+
+Steps to Access Your Apache Server from Your Phone:
+1. Verify Apache is Running: Make sure your Apache server is running on your PC. 
+2. Check the Local IP Address: Since you mentioned 10.42.0.1, ensure that this is the correct IP address of your PC when the hotspot is active.
+3. Test Locally: Before accessing from your phone, test if you can access the website locally on your PC:
+
+Open a browser on your PC and go to:
+http://localhost/databasesite/index1.php
+
+If it works, then proceed to the next step.
+
+4. Connect Your Phone to the Hotspot: Ensure your phone is connected to the hotspot created by your PC.
+
+5. Access from Your Phone: Open a browser on your phone and enter the following URL:
+example: http://10.42.0.1/databasesite/index1.php
+
+Important: 10.42.0.1 is the ip of the host pc with the server running the index.php
+
+
+## note:2
+Troubleshooting Access Issues
+If you encounter issues accessing the page from your phone, consider the following:
+
+Firewall Settings: Ensure that any firewall on your PC is configured to allow incoming connections on port 80 (HTTP). You can check and adjust firewall settings using:
+sudo ufw allow 80/tcp
+
+Apache Configuration: Double-check the Apache configuration to ensure it allows access from the local network. You can follow the steps you provided to verify the configuration and permissions.
+
+Check Apache Logs: If you still can’t access the page, check the Apache error logs for any hints about what might be going wrong:
+sudo tail -f /var/log/apache2/error.log
+
+To summarize, your PC's IP address for accessing the web server from your phone is 10.42.0.1 (assuming that's the correct IP for your hotspot). Ensure your phone is connected to the hotspot, and use that IP in the browser. If you encounter any issues, check your Apache server status, firewall settings, and Apache configuration.
+
+
+## note: 3
+# Dont worry if you face the following error on your phone or other device that want to access the hosted website in the local network.
+That is your  phone is connected to the pc's hotspot and you typed http://192.168.105.1/dtabasesite/index1.php to the web browser
+but it return to you the following:
+"requested url was not found on this server.
+apache/2.4.58(ubuntu)Server at 192.168.105.1 port 80"
+
+Check Apache Configuration
+If the issue persists, verify your Apache configuration:
+
+Open the Apache configuration file:
+sudo nano /etc/apache2/apache2.conf
+
+Look for the <Directory "/var/www/html"> block. Ensure it allows access:
+<Directory "/var/www/html">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+Also, make sure other directory in /etc/apache2 are also configured to look like the following if the error is persistent:
+<Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+</Directory>
+
+<Directory /usr/share>
+        AllowOverride All
+        Require all granted
+</Directory>
+
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</Directory>
+
+<Directory /srv/>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+</Directory>
+
+# This is where you put your files in the apache
+<Directory /var/www/html>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+
+
+# These are examples of blocks that you should create depending on the path of your folder of filename
+<Directory /var/www/html/phpdanikrossingjb>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory /var/www/html/phpdanikrossingjb/databasesite>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory /var/www/html/phpdanikrossingjb/databasesite/index1.php>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+After all the configurations now;
+Save and exit the editor (Ctrl+O, Enter, Ctrl+X).
+
+Restart Apache:
+sudo systemctl restart apache2
+
+(Optional) Debug Logs
+If it still doesn’t work, check the Apache error logs:
+sudo tail -f /var/log/apache2/error.log
+
+
+
+
+
+### Proudly made by Johnboscocjt
+"TanzaniaMadeTechScientist"
+"you happen, to make it happen"
 "Jesus is the King of all kings..."
 
 

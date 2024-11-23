@@ -55,6 +55,8 @@ Restart Apache in the XAMPP Control Panel.
 
 
 ### Steps for Linux (Ubuntu) users.
+If you're using Ubuntu, here's how to run a .php website on your local PC and access it from your phone:
+
 1. Set Up a Local Server
 Install Apache and PHP:
 ```bash
@@ -85,8 +87,13 @@ sudo cp /path/to/your/index.php /var/www/html/mywebsite/
 ```
 
 Set permissions:
+Apache needs proper permissions to read the files.
+Change ownership of the files to Apache's user:
 ```bash
 sudo chown -R www-data:www-data /var/www/html/mywebsite  
+```
+Ensure the files are readable:
+```bash
 sudo chmod -R 755 /var/www/html/mywebsite  
 ```
 
